@@ -1,16 +1,18 @@
-import type {MoveStrategy} from "./MoveStrategy.js";
-import {Board} from "../Board.js";
+import { BaseMoveStrategy } from "./BaseMoveStrategy.js";
+import { type Board } from "../Board.js";
+import { type Piece } from "../Piece.js";
 
-export class KingMoveStrategy implements MoveStrategy {
-    canMove(startX: number, startY: number, endX: number, endY: number, board: Board): boolean {
-        const dx = Math.abs(endX - startX);
-        const dy = Math.abs(endY - startY);
+export class KingMoveStrategy extends BaseMoveStrategy {
+    canMove(
+        startX: number,
+        startY: number,
+        endX: number,
+        endY: number,
+        board: Board,
+        piece: Piece
+    ): boolean {
+        const { dx, dy } = this.getDiffs(startX, startY, endX, endY);
 
-        if(dx === 1 && dy === 1 || dx === 1 && dy === 0 || dx === 0 && dy === 1){
-            return true;
-        }
-
-        return false;
+        return dx <= 1 && dy <= 1 && (dx + dy > 0);
     }
 }
-
