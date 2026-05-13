@@ -4,7 +4,8 @@
   "description": "Final project: A feature-rich Chess game built with TypeScript, focusing on clean code, design patterns, and software architecture principles.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "watch": "tsc -w"
   },
   "repository": {
     "type": "git",
