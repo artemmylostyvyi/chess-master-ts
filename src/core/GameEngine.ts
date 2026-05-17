@@ -111,63 +111,7 @@ export class GameEngine {
         return false;
     }
 
-    public isCheckmate(color: Color): boolean {
-        if (!this.isCheck(color)) {
-            return false;
-        }
-
-        for (let startX = 0; startX < 8; startX++) {
-            for (let startY = 0; startY < 8; startY++) {
-                const piece = this.board.cells[startY]![startX];
-
-                if (piece instanceof Piece && piece.color === color) {
-                    for (let endX = 0; endX < 8; endX++) {
-                        for (let endY = 0; endY < 8; endY++) {
-                            if (startX === endX && startY === endY) continue;
-
-                            if (piece.canMove({x: startX, y: startY}, {x: endX, y: endY}, this.board)) {
-                                const targetPiece = this.board.cells[endY]![endX] ?? null;
-
-                                if (targetPiece && targetPiece.color === color) continue;
-
-                                this.board.cells[endY]![endX] = piece;
-                                this.board.cells[startY]![startX] = null;
-
-                                const originalX = (piece as any).x;
-                                const originalY = (piece as any).y;
-                                if (originalX !== undefined && originalY !== undefined) {
-                                    (piece as any).x = endX;
-                                    (piece as any).y = endY;
-                                }
-
-                                const stillInCheck = this.isCheck(color);
-
-                                this.board.cells[startY]![startX] = piece;
-                                this.board.cells[endY]![endX] = targetPiece;
-
-                                if (originalX !== undefined && originalY !== undefined) {
-                                    (piece as any).x = originalX;
-                                    (piece as any).y = originalY;
-                                }
-
-                                if (!stillInCheck) {
-                                    return false;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return true;
-    }
-
-    public isStalemate(color: Color): boolean {
-        if (this.isCheck(color)) {
-            return false;
-        }
-
+    public hasValidMoves(color: Color): boolean {
         for (let startX = 0; startX < 8; startX++) {
             for (let startY = 0; startY < 8; startY++) {
                 const piece = this.board.cells[startY]![startX];
@@ -203,7 +147,7 @@ export class GameEngine {
                                 }
 
                                 if (!isSelfCheck) {
-                                    return false;
+                                    return true;
                                 }
                             }
                         }
@@ -212,6 +156,22 @@ export class GameEngine {
             }
         }
 
-        return true;
+        return false;
+    }
+
+    public isCheckmate(color: Color): boolean {
+        if (!this.isCheck(color)) {
+            return false;
+        }
+
+        return !this.hasValidMoves(color);
+    }
+
+    public isStalemate(color: Color): boolean {
+        if (this.isCheck(color)) {
+            return false;
+        }
+
+        return !this.hasValidMoves(color);
     }
 }

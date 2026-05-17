@@ -1,6 +1,6 @@
+import type {Board} from "./Board.js";
 import { type Position, Color } from "./types.js";
 import { type MoveStrategy } from "./strategies/MoveStrategy.js";
-import type {Board} from "./Board.js";
 
 export abstract class Piece {
     public position: Position;
