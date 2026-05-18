@@ -7,6 +7,7 @@ export abstract class Piece {
     public color: Color;
     protected strategy: MoveStrategy;
     public isFirstMove: boolean = true;
+    public abstract readonly type: string;
 
     constructor(position: Position, color: Color, strategy: MoveStrategy) {
         this.position = position;

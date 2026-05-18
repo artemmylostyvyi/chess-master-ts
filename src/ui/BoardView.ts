@@ -44,10 +44,10 @@ export class BoardView {
                 const piece = this.board.cells[y]![x];
                 if (piece) {
                     const img = document.createElement("img");
-                    img.src = `/assets/images/${piece.color.toLowerCase()}-${piece.constructor.name.toLowerCase()}.png`;
+                    img.src = `/assets/images/${piece.color.toLowerCase()}-${piece.type.toLowerCase()}.png`;
                     cellElement.appendChild(img);
 
-                    if (piece.constructor.name === "King" && piece.color === this.game.currentPlayer) {
+                    if (piece.type === "King" && piece.color === this.game.currentPlayer) {
                         if (this.game.isCheck(this.game.currentPlayer)) {
                             cellElement.classList.add("in-check");
                         }
@@ -99,7 +99,7 @@ export class BoardView {
                 }
 
                 let promotionChoice = "Queen";
-                if (pieceInHand && pieceInHand.constructor.name === "Pawn") {
+                if (pieceInHand && pieceInHand.type === "Pawn") {
                     const isWhitePromotion = pieceInHand.color === "white" && y === 0;
                     const isBlackPromotion = pieceInHand.color === "black" && y === 7;
 
