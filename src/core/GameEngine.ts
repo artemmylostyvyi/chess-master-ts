@@ -15,6 +15,7 @@ import { GameStorage } from "./GameStorage.js";
 import { SoundManager, ChessSound } from "./SoundManager.js";
 import { NotificationManager, NotifyType } from "../ui/NotificationManager.js";
 import { ScoreManager } from "./ScoreManager.js";
+import { PieceFactory } from "./PieceFactory.js";
 
 export class GameEngine {
     public board: Board;
@@ -163,16 +164,8 @@ export class GameEngine {
 
         const pieceColorStr = piece.color.toLowerCase();
         if ((pieceColorStr === "white" && y === 0) || (pieceColorStr === "black" && y === 7)) {
-            let newPiece;
-            switch (promotionChoice) {
-                case "Rook": newPiece = new Rook({ x, y }, piece.color); break;
-                case "Bishop": newPiece = new Bishop({ x, y }, piece.color); break;
-                case "Knight": newPiece = new Knight({ x, y }, piece.color); break;
-                case "Queen":
-                default:
-                    newPiece = new Queen({ x, y }, piece.color); break;
-            }
-            this.board.cells[y]![x] = newPiece;
+            // Refactored: Використання патерну Factory замість жорсткого switch
+            this.board.cells[y]![x] = PieceFactory.createPiece(promotionChoice, { x, y }, piece.color);
         }
     }
 
@@ -254,16 +247,8 @@ export class GameEngine {
                         const pPos = { x, y };
                         let newPiece;
 
-                        switch (cellData.type) {
-                            case "King": newPiece = new King(pPos, pColor); break;
-                            case "Queen": newPiece = new Queen(pPos, pColor); break;
-                            case "Rook": newPiece = new Rook(pPos, pColor); break;
-                            case "Bishop": newPiece = new Bishop(pPos, pColor); break;
-                            case "Knight": newPiece = new Knight(pPos, pColor); break;
-                            case "Pawn":
-                            default: newPiece = new Pawn(pPos, pColor); break;
-                        }
-                        this.board.cells[y]![x] = newPiece;
+                        // Refactored: Використання патерну Factory для відновлення фігур
+                        this.board.cells[y]![x] = PieceFactory.createPiece(cellData.type, pPos, pColor);
                     } else {
                         this.board.cells[y]![x] = null;
                     }
